@@ -80,6 +80,18 @@ class OutfitRead(OutfitBase):
         from_attributes = True
 
 
+class Outfit3DRead(BaseModel):
+    id: int = Field(alias="model_id")
+    outfit_id: int
+    file_url: str
+    format: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+        populate_by_name = True
+
+
 # TryOnSession
 class TryOnSessionCreate(BaseModel):
     photo_id: Optional[int] = None

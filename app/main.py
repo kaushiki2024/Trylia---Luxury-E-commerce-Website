@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.routes import auth, users, photos, outfits, sessions, recommendations
@@ -26,4 +27,8 @@ app.include_router(recommendations.router)
 @app.get("/")
 def root():
     return {"message": "Trylia API is running"}
+
+
+# Static serving for 3D files (if using local storage)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 

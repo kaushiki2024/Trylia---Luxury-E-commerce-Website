@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, JSON, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -45,6 +46,7 @@ class Outfit(Base):
 
     sessions: Mapped[list["TryOnSession"]] = relationship(back_populates="outfit")
     recommendations: Mapped[list["Recommendation"]] = relationship(back_populates="outfit")
+    model3d: Mapped[Optional["Outfit3D"]] = relationship(back_populates="outfit", uselist=False, cascade="all, delete-orphan")
 
 
 class TryOnSession(Base):
@@ -73,4 +75,18 @@ class Recommendation(Base):
 
     user: Mapped["User"] = relationship(back_populates="recommendations")
     outfit: Mapped["Outfit"] = relationship(back_populates="recommendations")
+
+
+class Outfit3D(Base):
+    __table_args__ = (
+        UniqueConstraint("outfit_id", name="uq_outfit3d_outfit"),
+    )
+
+    model_id: Mapped[int] = mapped_column(BigInteger, primary_key=True, index=True)
+    outfit_id: Mapped[int] = mapped_column(ForeignKey("outfit.outfit_id", ondelete="CASCADE"), nullable=False, index=True)
+    file_url: Mapped[str] = mapped_column(String(1024), nullable=False)
+    format: Mapped[str] = mapped_column(String(16), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+    outfit: Mapped["Outfit"] = relationship(back_populates="model3d")
 

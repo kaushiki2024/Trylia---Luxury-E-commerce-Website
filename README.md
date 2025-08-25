@@ -61,7 +61,7 @@ This repo includes a FastAPI backend for "Trylia: Your Virtual Dressing Room".
    ```
 5. Run migrations:
    ```bash
-   alembic upgrade head
+   PYTHONPATH=. alembic upgrade head
    ```
 6. Start the server:
    ```bash
@@ -75,6 +75,11 @@ This repo includes a FastAPI backend for "Trylia: Your Virtual Dressing Room".
 - Outfits: `POST /outfits`, `GET /outfits`, `GET /outfits/{id}`, `PATCH /outfits/{id}`, `DELETE /outfits/{id}`
 - Sessions: `POST /sessions`, `GET /sessions`
 - Recommendations: `POST /recommendations`, `GET /recommendations`
+- 3D Models: `POST /outfits/{id}/upload-3d` (multipart file), `GET /outfits/{id}/3d-model`
 
-Use the bearer token from `/auth/login` for protected routes.
+### 3D Model Notes
+- Accepted formats: `glb`, `gltf`, `fbx`.
+- Files are stored under `static/3d/` by default and served at `/static/3d/...`.
+- To use a CDN or object storage, set `MEDIA_BASE_URL` in `.env`; returned `file_url` will use that base.
+- CORS is enabled by default for frontend access.
 
